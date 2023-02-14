@@ -22,8 +22,9 @@ public class EchoServer {
 
     public void run(){
         try(var server = new ServerSocket(port)){
-            try(var clientSocket = server.accept()){
-                handle(clientSocket);
+            while (!server.isClosed()) {
+                Socket clientSocket = server.accept();
+                handle(clientSocket)
             }
         }catch (IOException e){
             System.out.printf("Connection is failed, port %n is busy.%n", port);
@@ -33,6 +34,7 @@ public class EchoServer {
 
     private void handle(Socket socket) throws IOException {
         InputStream input = socket.getInputStream();
+
         InputStreamReader isr = new InputStreamReader(input, "UTF-8");
 
         try(Scanner sc = new Scanner(isr);
